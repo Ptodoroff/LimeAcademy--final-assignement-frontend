@@ -1,0 +1,29 @@
+.App {
+  text-align: center;
+  padding: 1em;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons > button {
+  margin: 0.3em;
+}
+
+.dashboard {
+  margin: 1em;
+  margin-top: 4em;
+}
+
+.dashboard-main {
+  margin-top: 4em;
+  display: flex;
+  font-size: 2em;
+}
