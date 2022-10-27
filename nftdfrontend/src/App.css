@@ -1,3 +1,12 @@
+body > iframe {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 10px !important;
+  height: 10px !important;
+  display: none !important;
+}
+
 .App {
   text-align: center;
   padding: 1em;

@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
-// import Moralis from "moralis-v1";
 import { Link } from "react-router-dom";
 
 export default function Header() {
@@ -41,10 +40,10 @@ export default function Header() {
   return (
     <header className="App-header">
       <div className="buttons">
-        <Link to={"#!"} className="dashboard">Dashboard</Link>
-        <Link to={"#!"} className="about">About minting NFTD</Link>
-        <Link to={"#!"} className="stablecoin">Mint NFTD With your stablecoin</Link>
-        <Link to={"#!"} className="virtualLandMint">Mint NFTD with virtual Land</Link>
+        <Link to={"/dashboard"} className="dashboard">Dashboard</Link>{" | "}
+        <Link to={"/about"} className="about">About minting NFTD</Link>{" | "}
+        <Link to={"/mint-stable"} className="stablecoin">Mint NFTD With your stablecoin</Link>{" | "}
+        <Link to={"/mint-virtual"} className="virtualLandMint">Mint NFTD with virtual Land</Link>
       </div>
       {!isAuthenticated ? (
         <a href={"#!"} onClick={() => login()}>
@@ -54,7 +53,7 @@ export default function Header() {
         <p>Siging in...</p>
       ) : (
         <a href={"#!"} onClick={() => logOut()}>
-          {`${user.get("ethAddress").slice(0,6)}...${user.get("ethAddress").slice(user.get("ethAddress").length, -4)}`}
+          {`${user.get("ethAddress").slice(0,6)}...${user.get("ethAddress").slice(-4)}`}
         </a>
       )}
     </header>

@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
@@ -14,11 +13,13 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" index element={<Dashboard />} />
-          <Route path="artworks" element={<About />} />
-          <Route path="users" element={<MintStable />} />
-          <Route path="*" element={<MintVirtual />} />
-        </Routes>{" "}
-      </BrowserRouter>{" "}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/mint-stable" element={<MintStable />} />
+          <Route path="/mint-virtual" element={<MintVirtual />} />
+          <Route path="*" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
