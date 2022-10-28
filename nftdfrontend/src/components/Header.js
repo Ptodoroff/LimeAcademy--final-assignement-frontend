@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { Link } from "react-router-dom";
-
 export default function Header() {
-
   const {
     authenticate,
     isAuthenticated,
     isAuthenticating,
     user,
+    web3,
+    isWeb3Enabled,
     // account,
     logout,
   } = useMoralis();
@@ -40,10 +40,21 @@ export default function Header() {
   return (
     <header className="App-header">
       <div className="buttons">
-        <Link to={"/dashboard"} className="dashboard">Dashboard</Link>{" | "}
-        <Link to={"/about"} className="about">About minting NFTD</Link>{" | "}
-        <Link to={"/mint-stable"} className="stablecoin">Mint NFTD With your stablecoin</Link>{" | "}
-        <Link to={"/mint-virtual"} className="virtualLandMint">Mint NFTD with virtual Land</Link>
+        <Link to={"/dashboard"} className="dashboard">
+          Dashboard
+        </Link>
+        {" | "}
+        <Link to={"/about"} className="about">
+          About minting NFTD
+        </Link>
+        {" | "}
+        <Link to={"/mint-stable"} className="stablecoin">
+          Mint NFTD With your stablecoin
+        </Link>
+        {" | "}
+        <Link to={"/mint-virtual"} className="virtualLandMint">
+          Mint NFTD with virtual Land
+        </Link>
       </div>
       {!isAuthenticated ? (
         <a href={"#!"} onClick={() => login()}>
@@ -53,11 +64,12 @@ export default function Header() {
         <p>Siging in...</p>
       ) : (
         <a href={"#!"} onClick={() => logOut()}>
-          {`${user.get("ethAddress").slice(0,6)}...${user.get("ethAddress").slice(-4)}`}
+          {`${user.get("ethAddress").slice(0, 6)}...${user
+            .get("ethAddress")
+            .slice(-4)}`}
         </a>
       )}
     </header>
-
   );
 }
 
