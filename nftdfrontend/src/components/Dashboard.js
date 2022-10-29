@@ -42,8 +42,6 @@ export default function Dashboard() {
       dummyUSDTAddress
     );
     setUSDT(String(USDTswapped));
-
-    console.log(String(USDTswapped));
   }
 
   async function seeTotalNFTDSupply() {
@@ -60,25 +58,73 @@ export default function Dashboard() {
       </h2>
       <div className="dashboard-main">
         <div className="totalNFTD">
-          Total NFTD minted: <span>{NFTD}</span>
+          <div className="totalNFTD">
+            <div className="card" style={{ width: "10rem" }}>
+              Total NFTD minted:
+              <div className="card-body">
+                <p className="card-text">
+                  {" "}
+                  <span>{NFTD}</span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="totalNFTD">
-          Total USDT swapped: <span>{USDT}</span>
+          <div className="card" style={{ width: "10rem" }}>
+            Total USDT swapped:
+            <div className="card-body">
+              <p className="card-text">{USDT}</p>
+            </div>
+          </div>
         </div>
         <div className="totalNFTD">
-          Total USDC swapped: <span></span>
+          <div className="totalNFTD">
+            <div className="card" style={{ width: "10rem" }}>
+              Total USDC swapped:
+              <div className="card-body">
+                <p className="card-text"></p>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="totalNFTD">
-          Total DAI swapped: <span></span>
+          <div className="totalNFTD">
+            <div className="card" style={{ width: "10rem" }}>
+              Total DAI swapped:
+              <div className="card-body">
+                <p className="card-text"></p>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="totalNFTD">
-          Total ETH staked: <span></span>
+          <div className="card" style={{ width: "10rem" }}>
+            Total ETH staked:
+            <div className="card-body">
+              <p className="card-text"></p>
+            </div>
+          </div>
         </div>
         <div className="totalNFTD">
-          Total Rewards accrued: <span></span>
+          <div className="totalNFTD">
+            <div className="card" style={{ width: "10rem" }}>
+              Total Rewards accrued:
+              <div className="card-body">
+                <p className="card-text"></p>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="totalNFTD">
-          Average APY: <span></span>
+          <div className="totalNFTD">
+            <div className="card" style={{ width: "10rem" }}>
+              Average APY:{" "}
+              <div className="card-body">
+                <p className="card-text"></p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

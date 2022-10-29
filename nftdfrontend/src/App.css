@@ -36,3 +36,11 @@ body {
   display: flex;
   font-size: 2em;
 }
+.dashboard-main > div {
+  margin: 1em;
+  font-size: 0.8em;
+}
+
+a {
+  text-decoration: none;
+}

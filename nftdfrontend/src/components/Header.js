@@ -40,30 +40,30 @@ export default function Header() {
   return (
     <header className="App-header">
       <div className="buttons">
-        <Link to={"/dashboard"} className="dashboard">
+        <Link to={"/dashboard"} className="dashboarButton btn btn-warning">
           Dashboard
         </Link>
         {" | "}
-        <Link to={"/about"} className="about">
+        <Link to={"/about"} className="about btn btn-warning">
           About minting NFTD
         </Link>
         {" | "}
-        <Link to={"/mint-stable"} className="stablecoin">
+        <Link to={"/mint-stable"} className="stablecoin btn btn-warning">
           Mint NFTD With your stablecoin
         </Link>
         {" | "}
-        <Link to={"/mint-virtual"} className="virtualLandMint">
+        <Link to={"/mint-virtual"} className="virtualLandMint btn btn-warning">
           Mint NFTD with virtual Land
         </Link>
       </div>
       {!isAuthenticated ? (
-        <a href={"#!"} onClick={() => login()}>
+        <a href={"#!"} className="btn btn-primary" onClick={() => login()}>
           Connect Wallet
         </a>
       ) : isAuthenticating ? (
         <p>Siging in...</p>
       ) : (
-        <a href={"#!"} onClick={() => logOut()}>
+        <a href={"#!"} className="btn btn-success" onClick={() => logOut()}>
           {`${user.get("ethAddress").slice(0, 6)}...${user
             .get("ethAddress")
             .slice(-4)}`}
