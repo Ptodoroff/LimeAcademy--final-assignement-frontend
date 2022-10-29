@@ -4,9 +4,11 @@ import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import ABI from "../contracts/Swap.json";
+import NFTDAbi from "../contracts/ERC20.json";
 
 export default function Dashboard() {
   const [USDT, setUSDT] = useState(" ");
+  const [NFTD, setNFTD] = useState(" ");
   const {
     authenticate,
     isAuthenticated,
@@ -14,13 +16,16 @@ export default function Dashboard() {
     user,
     web3,
     isWeb3Enabled,
-    // account,
     logout,
   } = useMoralis();
 
   useEffect(() => {
     if (isWeb3Enabled) {
       seeUsdtSwapped();
+      seeTotalNFTDSupply();
+      console.log("Isweb3enabled -" + isWeb3Enabled);
+    } else {
+      alert(" reconnect the wallet to enable web3 ");
     }
   }, [isWeb3Enabled]);
 
@@ -40,6 +45,13 @@ export default function Dashboard() {
 
     console.log(String(USDTswapped));
   }
+
+  async function seeTotalNFTDSupply() {
+    const NFTDAddress = "0xa362c101a5d1317ac30376eeeefb543833d34d1a";
+    let signer = web3.getSigner();
+    const NFTDContract = new ethers.Contract(NFTDAddress, NFTDAbi, signer);
+    setNFTD(String(await NFTDContract.totalSupply()).slice(0, 3));
+  }
   return (
     <div className="dashboard">
       <h2 className="explanation">
@@ -48,7 +60,7 @@ export default function Dashboard() {
       </h2>
       <div className="dashboard-main">
         <div className="totalNFTD">
-          Total NFTD minted: <span></span>
+          Total NFTD minted: <span>{NFTD}</span>
         </div>
         <div className="totalNFTD">
           Total USDT swapped: <span>{USDT}</span>

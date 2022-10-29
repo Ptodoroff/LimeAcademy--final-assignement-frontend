@@ -1,10 +1,10 @@
-body > iframe {
-  position: absolute !important;
-  left: 0 !important;
-  top: 0 !important;
-  width: 10px !important;
-  height: 10px !important;
-  display: none !important;
+@import url("https://use.typekit.net/atk3mme.css");
+body {
+  padding: 0.5em;
+  margin: 0;
+  font-family: fira-sans, sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .App {

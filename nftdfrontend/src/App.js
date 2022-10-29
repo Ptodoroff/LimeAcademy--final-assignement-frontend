@@ -6,6 +6,7 @@ import Dashboard from "./components/Dashboard";
 import About from "./components/About";
 import MintStable from "./components/MintStable";
 import MintVirtual from "./components/MintVirtual";
+import "./App.css";
 
 function App() {
   return (
