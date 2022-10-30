@@ -35,6 +35,7 @@ body {
   margin-top: 4em;
   display: flex;
   font-size: 2em;
+  justify-content: center;
 }
 .dashboard-main > div {
   margin: 1em;

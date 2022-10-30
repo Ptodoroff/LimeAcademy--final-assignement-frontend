@@ -8,10 +8,13 @@ import { useMoralis, useChain } from "react-moralis";
 import ERC20Abi from "../contracts/ERC20.json";
 import "../App.css";
 const MintStable = () => {
-  const [currency, setCurrency] = useState(" ");
-  const [value, setValue] = useState(" ");
+  const [currency, setCurrency] = useState(
+    "0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844"
+  );
+  const [value, setValue] = useState(0);
   const [NFTDBalance, setNFTDBalance] = useState(0);
   const [RETHBalance, setRETHBalance] = useState(0);
+  const [decimals, setDecimals] = useState(18);
   const { web3, account, isWeb3Enabled } = useMoralis();
   let swapContractAddress = "0xCf94E2876258EAF7EfdFE779fd1530c6b60cf4DA";
   const { switchNetwork, chainId, chain } = useChain();
@@ -19,6 +22,7 @@ const MintStable = () => {
   const resetForm = () => {
     setCurrency(null);
     setValue(null);
+    setDecimals(null);
   };
 
   useEffect(() => {
@@ -49,8 +53,8 @@ const MintStable = () => {
     setRETHBalance(RETHBalanceFormatted);
   };
   const selectCurrency = async (e) => {
-    setCurrency(e.target.value);
-    console.log(e.target.value);
+    await setCurrency(e.target.value);
+    await getDecimals();
   };
 
   const valueInput = async (e) => {
@@ -60,11 +64,21 @@ const MintStable = () => {
   const approve = async () => {
     let signer = web3.getSigner();
     const selectedStablecoin = new ethers.Contract(currency, ERC20Abi, signer);
-    let tx = await selectedStablecoin.approve(swapContractAddress, value);
+    let tx = await selectedStablecoin.approve(
+      swapContractAddress,
+      String(value * 10 ** decimals)
+    );
     let response = await tx.wait();
     response
       ? console.log("approved successfully")
       : console.log("error with the approve transaction");
+  };
+
+  const getDecimals = async () => {
+    let signer = web3.getSigner();
+    const selectedStablecoin = new ethers.Contract(currency, ERC20Abi, signer);
+    let decimals = Number(await selectedStablecoin.decimals());
+    setDecimals(decimals);
   };
 
   return (
@@ -98,7 +112,7 @@ const MintStable = () => {
               selectCurrency(e);
             }}
           >
-            <option>Select stablecoin:</option>
+            <option className="dropdown-toggle">Select stablecoin:</option>
             <option value="0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844">
               DAI
             </option>
@@ -128,13 +142,15 @@ const MintStable = () => {
           className="btn btn-info"
           onClick={async () => {
             let signer = web3.getSigner();
-
             const swapContract = new ethers.Contract(
               swapContractAddress,
               ABI,
               signer
             );
-            let tx = await swapContract.swap(value, currency);
+            let tx = await swapContract.swap(
+              String(value * 10 ** decimals),
+              currency
+            );
             let response = await tx.wait();
             response
               ? console.log("swapped successfully")

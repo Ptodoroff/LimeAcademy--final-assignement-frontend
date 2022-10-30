@@ -7,10 +7,11 @@ import ABI from "../contracts/Swap.json";
 import NFTDAbi from "../contracts/ERC20.json";
 
 export default function Dashboard() {
-  const { switchNetwork, chainId, chain } = useChain();
+  const { chainId } = useChain();
   const [DAI, setDAI] = useState(0);
   const [USDC, setUSDC] = useState(0);
   const [NFTD, setNFTD] = useState(0);
+  const [ETH, setETH] = useState(0);
   const { web3, isWeb3Enabled } = useMoralis();
   const swapContractAddress = "0xCf94E2876258EAF7EfdFE779fd1530c6b60cf4DA";
   const DAIAddress = "0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844";
@@ -21,8 +22,18 @@ export default function Dashboard() {
       seeTotalNFTDSupply();
       seeDaiSwapped();
       seeUsdcSwapped();
+      seeEthStaked();
     }
   }, [isWeb3Enabled, web3]);
+
+  async function seeEthStaked() {
+    let RETHAddress = "0x178E141a0E3b34152f73Ff610437A7bf9B83267A";
+    let ETHStaked;
+    let signer = web3.getSigner();
+    const RETHTokenContract = new ethers.Contract(RETHAddress, NFTDAbi, signer);
+    ETHStaked = await RETHTokenContract.balanceOf(swapContractAddress);
+    setETH(BigNumber.from(ETHStaked));
+  }
 
   async function seeDaiSwapped() {
     let DAIswapped;
@@ -100,7 +111,9 @@ export default function Dashboard() {
           <div className="card" style={{ width: "10rem" }}>
             Total ETH staked:
             <div className="card-body">
-              <p className="card-text"></p>
+              <p className="card-text">
+                {Number(ethers.utils.formatEther(ETH)).toFixed(4)}
+              </p>
             </div>
           </div>
         </div>
@@ -116,7 +129,7 @@ export default function Dashboard() {
         </div>
         <div className="totalNFTD">
           <div className="totalNFTD">
-            <div className="card" style={{ width: "10rem" }}>
+            <div className="card" style={{ width: "10rem", height: "9.2rem" }}>
               Average APY:{" "}
               <div className="card-body">
                 <p className="card-text"></p>
