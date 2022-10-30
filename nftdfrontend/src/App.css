@@ -41,6 +41,14 @@ body {
   font-size: 0.8em;
 }
 
+.stablecoinInput > * {
+  margin: 1em;
+}
+
+.mintStableBody > * {
+  margin: 1em;
+}
+
 a {
   text-decoration: none;
 }

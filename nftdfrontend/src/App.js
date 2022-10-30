@@ -27,11 +27,3 @@ function App() {
 }
 
 export default App;
-
-/*
-<Link to={"#!"} className="dashboard">Dashboard</Link>
-<Link to={"#!"} className="about">About minting NFTD</Link>
-<Link to={"#!"} className="stablecoin">Mint NFTD With your stablecoin</Link>
-<Link to={"#!"} className="virtualLandMint">Mint NFTD with virtual Land</Link>
-
- */
