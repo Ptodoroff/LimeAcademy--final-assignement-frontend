@@ -1,12 +1,11 @@
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
 import Header from "./components/Header";
 import Dashboard from "./components/Dashboard";
 import About from "./components/About";
 import MintStable from "./components/MintStable";
 import MintVirtual from "./components/MintVirtual";
-import "./App.css";
 
 function App() {
   return (

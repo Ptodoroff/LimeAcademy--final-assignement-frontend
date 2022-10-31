@@ -1,4 +1,3 @@
-import React from "react";
 import "../App.css";
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
@@ -9,15 +8,7 @@ import NFTDAbi from "../contracts/ERC20.json";
 export default function Dashboard() {
   const [USDT, setUSDT] = useState(" ");
   const [NFTD, setNFTD] = useState(" ");
-  const {
-    authenticate,
-    isAuthenticated,
-    isAuthenticating,
-    user,
-    web3,
-    isWeb3Enabled,
-    logout,
-  } = useMoralis();
+  const {web3, isWeb3Enabled} = useMoralis();
 
   useEffect(() => {
     if (isWeb3Enabled) {
@@ -50,6 +41,8 @@ export default function Dashboard() {
     const NFTDContract = new ethers.Contract(NFTDAddress, NFTDAbi, signer);
     setNFTD(String(await NFTDContract.totalSupply()).slice(0, 3));
   }
+
+
   return (
     <div className="dashboard">
       <h2 className="explanation">
