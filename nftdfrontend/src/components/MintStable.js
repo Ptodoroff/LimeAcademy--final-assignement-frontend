@@ -1,52 +1,60 @@
-import { ethers } from "ethers";
+//DECIMAAAAAAAALS FOR THE FRONEND - NEED TO CALL THE DECIMALS FN OF THE INPUT
+//CHANGE THE NFTD ADDRESS TO THE NEW ONE .
+//COPY THE CODE OF THE NEW SWAP CONTRACT HERE AND PUSH IT TO THE REPO TOGETHER WITH THE NEW NFTD TOKEN CONTRACT CODE !
+import { BigNumber, ethers } from "ethers";
 import ABI from "../contracts/Swap.json";
 import { useState, useEffect } from "react";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useChain } from "react-moralis";
 import ERC20Abi from "../contracts/ERC20.json";
-
+import "../App.css";
 const MintStable = () => {
   const [currency, setCurrency] = useState(
-    "0xe00D656db10587363c6106D003d08fBE2F0EaC81"
+    "0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844"
   );
-  const [value, setValue] = useState(" ");
-  const [NFTDBalance, setNFTDBalance] = useState(" ");
-  const [RETHBalance, setRETHBalance] = useState();
-  let selectedStablecoin = document.getElementById("stablecoinList");
+  const [value, setValue] = useState(0);
+  const [NFTDBalance, setNFTDBalance] = useState(0);
+  const [RETHBalance, setRETHBalance] = useState(0);
+  const [decimals, setDecimals] = useState(18);
   const { web3, account, isWeb3Enabled } = useMoralis();
-  let swapContractAddress = "0x14b3E3dd85dCf193e10658C76dA31c31A0f62a36";
+  let swapContractAddress = "0xCf94E2876258EAF7EfdFE779fd1530c6b60cf4DA";
+  const { switchNetwork, chainId, chain } = useChain();
 
   const resetForm = () => {
     setCurrency(null);
     setValue(null);
+    setDecimals(null);
   };
 
   useEffect(() => {
-    if (isWeb3Enabled) {
+    if (isWeb3Enabled && chainId === "0x5") {
       fetchNFTDBalance();
       fetchRETHBalance();
     }
-  }, [isWeb3Enabled]);
+  }, [isWeb3Enabled, web3]);
   const fetchNFTDBalance = async () => {
-    const NFTDAddress = "0xa362c101a5d1317ac30376eeeefb543833d34d1a";
+    const NFTDAddress = "0x6e5B038169F177a026a32FcFF7bB80333831D038";
     let signer = web3.getSigner();
     const NFTDContract = new ethers.Contract(NFTDAddress, ERC20Abi, signer);
 
-    setNFTDBalance(String(await NFTDContract.balanceOf(account)).slice(0, 3));
+    setNFTDBalance(BigNumber.from(await NFTDContract.balanceOf(account)));
   };
 
   const fetchRETHBalance = async () => {
     let signer = web3.getSigner();
-    const swapContractAddress = "0x14b3E3dd85dCf193e10658C76dA31c31A0f62a36";
 
     const swapContract = new ethers.Contract(swapContractAddress, ABI, signer);
 
-    let RETHbalanceTemp = await swapContract.depositedRethByUser(account);
-    let RETHBalanceFormatted = ethers.utils.formatEther(RETHbalanceTemp);
+    let RETHbalanceTemp = String(
+      await swapContract.depositedRethByUser(account)
+    );
+    let RETHBalanceFormatted = Number(
+      ethers.utils.formatEther(RETHbalanceTemp)
+    ).toFixed(4);
     setRETHBalance(RETHBalanceFormatted);
   };
-  const selectCurrency = async () => {
-    setCurrency(selectedStablecoin.value);
-    console.log(currency);
+  const selectCurrency = async (e) => {
+    await setCurrency(e.target.value);
+    await getDecimals();
   };
 
   const valueInput = async (e) => {
@@ -54,42 +62,66 @@ const MintStable = () => {
   };
 
   const approve = async () => {
-    const dummyUSDTAddress = "0xe00D656db10587363c6106D003d08fBE2F0EaC81";
     let signer = web3.getSigner();
-    const dummyUSDTcontract = new ethers.Contract(
-      dummyUSDTAddress,
-      ERC20Abi,
-      signer
+    const selectedStablecoin = new ethers.Contract(currency, ERC20Abi, signer);
+    let tx = await selectedStablecoin.approve(
+      swapContractAddress,
+      String(value * 10 ** decimals)
     );
-    let tx = await dummyUSDTcontract._approve(swapContractAddress, value);
     let response = await tx.wait();
     response
       ? console.log("approved successfully")
       : console.log("error with the approve transaction");
   };
 
+  const getDecimals = async () => {
+    let signer = web3.getSigner();
+    const selectedStablecoin = new ethers.Contract(currency, ERC20Abi, signer);
+    let decimals = Number(await selectedStablecoin.decimals());
+    setDecimals(decimals);
+  };
+
   return (
-    <div>
+    <div className="mintStableBody">
       <h2 className="explanation">
         NFTD is a fully decentralised stablecoin with 100% capital efficiency,
         backed by staked ETH, generating staking yield for the stablecoin holder
       </h2>
+      <a
+        className="btn btn-light"
+        href="https://goerlifaucet.com/"
+        target="blank"
+      >
+        Get Goerli Ether
+      </a>{" "}
+      <a
+        href="https://app.uniswap.org/chain=gorli#/swap?exactField=input&inputCurrency=ETH&outputCurrency=0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844"
+        target="blank"
+        className="btn btn-light"
+      >
+        {" "}
+        Buy test DAI
+      </a>
+      <h3> Mint NFTD with a stablecoin of your choice:</h3>
       <div className="stablecoinInput">
-        <label htmlFor="amount">Select stablecoin:</label>
-        <select
-          id="stablecoinList"
-          onChange={() => {
-            selectCurrency();
-            console.log(isWeb3Enabled);
-          }}
-        >
-          <option value="0xe00D656db10587363c6106D003d08fBE2F0EaC81">
-            TestUSDT
-          </option>
-          <option>DAI</option>
-          <option>USDC</option>
-          <option>USDT</option>
-        </select>
+        <label htmlFor="amount"></label>
+        {
+          <select
+            id="stablecoinList"
+            onChange={(e) => {
+              selectCurrency(e);
+            }}
+          >
+            <option className="dropdown-toggle">Select stablecoin:</option>
+            <option value="0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844">
+              DAI
+            </option>
+            <option value="0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C">
+              USDC
+            </option>
+          </select>
+        }
+
         <input
           type="number"
           placeholder="Enter amount"
@@ -99,6 +131,7 @@ const MintStable = () => {
           }}
         ></input>
         <button
+          className="btn btn-secondary"
           onClick={() => {
             approve();
           }}
@@ -106,15 +139,18 @@ const MintStable = () => {
           Approve
         </button>
         <button
+          className="btn btn-info"
           onClick={async () => {
             let signer = web3.getSigner();
-
             const swapContract = new ethers.Contract(
               swapContractAddress,
               ABI,
               signer
             );
-            let tx = await swapContract.swap(value, currency);
+            let tx = await swapContract.swap(
+              String(value * 10 ** decimals),
+              currency
+            );
             let response = await tx.wait();
             response
               ? console.log("swapped successfully")
@@ -134,11 +170,12 @@ const MintStable = () => {
       </div>
       <div id="infoCluster">
         <p>
-          NFTD balance of user: <span>{NFTDBalance}</span>{" "}
+          NFTD balance of user:{" "}
+          <span>{ethers.utils.formatEther(NFTDBalance)}</span>{" "}
         </p>
         <p>
           {" "}
-          total Reth staked by user: <span>{RETHBalance}</span>
+          total rETH staked by user: <span>{RETHBalance} rETH</span>
         </p>
       </div>
     </div>

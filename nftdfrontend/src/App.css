@@ -35,10 +35,19 @@ body {
   margin-top: 4em;
   display: flex;
   font-size: 2em;
+  justify-content: center;
 }
 .dashboard-main > div {
   margin: 1em;
   font-size: 0.8em;
+}
+
+.stablecoinInput > * {
+  margin: 1em;
+}
+
+.mintStableBody > * {
+  margin: 1em;
 }
 
 a {

@@ -1,21 +1,28 @@
 import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { Link } from "react-router-dom";
+import { useChain } from "react-moralis";
 export default function Header() {
   const {
     authenticate,
     isAuthenticated,
     isAuthenticating,
+
     user,
-    web3,
-    isWeb3Enabled,
-    // account,
+
+    enableWeb3,
     logout,
   } = useMoralis();
+  const { switchNetwork, chainId, chain } = useChain();
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log("is authenticated");
+      async function web3andSwitchChain() {
+        await enableWeb3();
+        console.log("is authenticated");
+        await switchNetwork("0x5");
+      }
+      web3andSwitchChain();
     }
   }, [isAuthenticated]);
 
@@ -23,8 +30,7 @@ export default function Header() {
     if (!isAuthenticated) {
       await authenticate({ signingMessage: "Log in to NFTD Dasboard" })
         .then(function (user) {
-          console.log("logged in user:", user);
-          console.log(user.get("ethAddress"));
+          console.log("logged in user:" + user.get("ethAddress"));
         })
         .catch(function (error) {
           console.log(error);
@@ -36,6 +42,10 @@ export default function Header() {
     await logout();
     console.log("logged out");
   };
+
+  async function loginWeb3() {
+    await login();
+  }
 
   return (
     <header className="App-header">
@@ -57,7 +67,7 @@ export default function Header() {
         </Link>
       </div>
       {!isAuthenticated ? (
-        <a href={"#!"} className="btn btn-primary" onClick={() => login()}>
+        <a href={"#!"} className="btn btn-primary" onClick={loginWeb3}>
           Connect Wallet
         </a>
       ) : isAuthenticating ? (
@@ -72,19 +82,3 @@ export default function Header() {
     </header>
   );
 }
-
-// import React from "react";
-//
-// export default function Header() {
-//   return (
-//     <header className="App-header">
-//       <div className="buttons">
-//         <button className="dashboard">Dashboard</button>
-//         <button className="stablecoin">Mint NFTD With your stablecoin</button>
-//         <button className="about">About minting NFTD</button>
-//         <button className="virtualLandMint">Mint NFTD with virtual Land</button>
-//       </div>
-//       <button className="connect">Connect Wallet</button>
-//     </header>
-//   );
-// }
