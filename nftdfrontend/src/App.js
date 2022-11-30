@@ -2,10 +2,8 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import Dashboard from "./components/Dashboard";
-import About from "./components/About";
-import MintStable from "./components/MintStable";
-import MintVirtual from "./components/MintVirtual";
+import Bridge from "./components/Bridge";
+import Home from "./components/Home";
 
 function App() {
   return (
@@ -13,12 +11,8 @@ function App() {
       <BrowserRouter>
         <Header />
         <Routes>
-          <Route path="/" index element={<Dashboard />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/mint-stable" element={<MintStable />} />
-          <Route path="/mint-virtual" element={<MintVirtual />} />
-          <Route path="*" element={<Dashboard />} />
+          <Route path="/Home" index element={<Home />} />
+          <Route path="/Bridge" index element={<Bridge />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -16,40 +16,56 @@ body {
   height: 40vmin;
   pointer-events: none;
 }
+a {
+  text-decoration: none;
+}
 
 .App-header {
   display: flex;
   justify-content: space-between;
 }
-
-.buttons > button {
-  margin: 0.3em;
+/* Home */
+.title {
+  margin-top: 3em;
+  margin-bottom: 0.5em;
+  font-size: 5em;
 }
-
-.dashboard {
-  margin: 1em;
-  margin-top: 4em;
-}
-
-.dashboard-main {
-  margin-top: 4em;
-  display: flex;
+.bridgeButton {
+  margin-top: 2em;
+  width: 10em;
   font-size: 2em;
+}
+
+/* Bridge */
+.mainContainer {
+  margin: 2em;
+}
+
+.tokenSelect,
+.chainSelect {
+  height: 10vh;
+  margin: 2em;
+  background-color: grey;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  font-size: 1.7em;
+  border-radius: 20px;
 }
-.dashboard-main > div {
-  margin: 1em;
-  font-size: 0.8em;
-}
-
-.stablecoinInput > * {
-  margin: 1em;
-}
-
-.mintStableBody > * {
-  margin: 1em;
+select,
+input {
+  background: orange;
+  border-radius: 20px;
+  margin-left: 1em;
 }
 
-a {
-  text-decoration: none;
+.amountCluster {
+  display: flex;
+  flex-direction: column;
+  background-color: grey;
+  height: 15vh;
+  margin: 2em;
+  font-size: 1.5em;
+  border-radius: 20px;
+  justify-content: center;
 }
