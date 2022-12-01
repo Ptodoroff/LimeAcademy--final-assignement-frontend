@@ -77,7 +77,15 @@ input {
   justify-content: center;
 }
 
+.buttons {
+  display: flex;
+  justify-content: center;
+}
 .buttons > * {
   margin: 1em;
-  width: 10em;
+  width: 5em;
+}
+
+.lockButton {
+  display: flex;
 }

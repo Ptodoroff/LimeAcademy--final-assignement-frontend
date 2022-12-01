@@ -7,6 +7,7 @@ import {
   bscChainIdTestnet,
   EthBridgeContractAddress,
   BscBridgeContractAddress,
+  fee,
 } from "../constants";
 import bridgeContractAbi from "../contracts/Bridge.json";
 import wrappedTokenAbi from "../contracts/WrappedToken.json";
@@ -25,9 +26,9 @@ export default function Bridge() {
   const [inputAmount, setInputAmount] = useState(0);
   const [hiddenNotification, setHiddenNotification] = useState(true);
   const [message, setMessage] = useState("");
-  let signer;
   let bridgeAbi = bridgeContractAbi.abi;
   let tokenAbi = wrappedTokenAbi.abi;
+  let signer;
   //================================
   //UseEffect
   //================================
@@ -52,7 +53,7 @@ export default function Bridge() {
     let balance = e.target.selectedOptions[0].getAttribute("data-balance");
     let decimals = e.target.selectedOptions[0].getAttribute("data-decimals");
 
-    setSelectedToken(e.target.value);
+    setSelectedToken(e.target.selectedOptions[0].getAttribute("value"));
     setSelectedTokenName(name);
     setSelectedTokenBalance(balance);
     setSelectedTokenDecimals(decimals);
@@ -65,31 +66,35 @@ export default function Bridge() {
   // ================================
   // contract instances
   // ================================
-  const EthBridgeContract = new ethers.Contract(
-    EthBridgeContractAddress,
-    bridgeAbi,
-    signer
-  );
-  const BscBridgeContract = new ethers.Contract(
-    BscBridgeContractAddress,
-    bridgeAbi,
-    signer
-  );
+  // const EthBridgeContract = new ethers.Contract(
+  //   EthBridgeContractAddress,
+  //   bridgeAbi,
+  //   signer
+  // );
+  // const BscBridgeContract = new ethers.Contract(
+  //   BscBridgeContractAddress,
+  //   bridgeAbi,
+  //   signer
+  // );
   // ================================
   // contract function  calls
   // ================================
 
   async function approve() {
+    let signer = web3.getSigner();
     let selectedTokenContract = new ethers.Contract(
       selectedToken,
       tokenAbi,
       signer
     );
+    console.log(selectedTokenContract);
     let bridgeContractToApprove =
-      chainId == "0x05" ? EthBridgeContractAddress : BscBridgeContractAddress;
+      chainId == "0x5" ? EthBridgeContractAddress : BscBridgeContractAddress;
+    console.log(chainId);
+    console.log(bridgeContractToApprove);
     let tx = await selectedTokenContract.approve(
       bridgeContractToApprove,
-      ethers.utils.parseUnits(selectedTokenBalance, selectedTokenDecimals)
+      ethers.utils.parseUnits(inputAmount, selectedTokenDecimals)
     );
     displayNotification("Approve pending ... ");
     setHiddenNotification(false);
@@ -102,13 +107,25 @@ export default function Bridge() {
   }
 
   async function lock() {
+    let signer = web3.getSigner();
+    const EthBridgeContract = new ethers.Contract(
+      EthBridgeContractAddress,
+      bridgeAbi,
+      signer
+    );
+    const BscBridgeContract = new ethers.Contract(
+      BscBridgeContractAddress,
+      bridgeAbi,
+      signer
+    );
     let selectedBridgeContract =
       chainId == "0x5" ? EthBridgeContract : BscBridgeContract;
     let tx = await selectedBridgeContract.lock(
       selectedToken,
-      ethers.utils.parseUnits(inputAmount, selectedTokenDecimals, {
-        value: ethers.utils.parseEther("0.03"),
-      })
+      ethers.utils.parseUnits(String(inputAmount), selectedTokenDecimals),
+      {
+        value: String(fee),
+      }
     );
     displayNotification("Bridging in process ... ");
     setHiddenNotification(false);
@@ -202,6 +219,11 @@ export default function Bridge() {
           ></input>
         </div>
       </div>
+      <p>
+        {" "}
+        Note: there is a 0.03 {chainId == "0x5" ? "ETH" : "BSC"} fee on
+        bridging.{" "}
+      </p>
       <div className="buttons">
         <button
           className="btn btn-secondary"
@@ -212,15 +234,17 @@ export default function Bridge() {
         >
           Approve
         </button>
-        <button
-          className="btn btn-secondary"
-          onClick={() => {
-            lock();
-          }}
-          disabled={!inputAmount || !selectedToken}
-        >
-          Lock
-        </button>
+        <div className="lockButton">
+          <button
+            className="btn btn-secondary"
+            onClick={() => {
+              lock();
+            }}
+            disabled={!inputAmount || !selectedToken}
+          >
+            Lock
+          </button>
+        </div>
       </div>
       <NotificationPanel
         message={message}
