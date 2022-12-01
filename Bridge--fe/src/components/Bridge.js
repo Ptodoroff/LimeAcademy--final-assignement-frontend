@@ -75,6 +75,9 @@ export default function Bridge() {
     bridgeAbi,
     signer
   );
+  // ================================
+  // contract function  calls
+  // ================================
 
   async function approve() {
     let selectedTokenContract = new ethers.Contract(
@@ -95,6 +98,25 @@ export default function Bridge() {
       displayNotification("Approve Successful.");
     } else {
       displayNotification("Error with the approve transaction");
+    }
+  }
+
+  async function lock() {
+    let selectedBridgeContract =
+      chainId == "0x5" ? EthBridgeContract : BscBridgeContract;
+    let tx = await selectedBridgeContract.lock(
+      selectedToken,
+      ethers.utils.parseUnits(inputAmount, selectedTokenDecimals, {
+        value: ethers.utils.parseEther("0.03"),
+      })
+    );
+    displayNotification("Bridging in process ... ");
+    setHiddenNotification(false);
+    let response = await tx.wait();
+    if (response) {
+      displayNotification("Bridging Successful.");
+    } else {
+      displayNotification("Error with the bridge transaction");
     }
   }
 
@@ -192,10 +214,12 @@ export default function Bridge() {
         </button>
         <button
           className="btn btn-secondary"
-          // onClick={approve}
+          onClick={() => {
+            lock();
+          }}
           disabled={!inputAmount || !selectedToken}
         >
-          Transfer
+          Lock
         </button>
       </div>
       <NotificationPanel
