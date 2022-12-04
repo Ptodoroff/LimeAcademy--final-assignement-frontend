@@ -35,7 +35,7 @@ export default function Claim() {
 
   useEffect(() => {
     setSelectedDestinationChain(chainId);
-  }, [chainId]);
+  }, [chainId, selectedDestinationChain]);
 
   useEffect(() => {
     if (isWeb3Enabled) {
@@ -44,7 +44,7 @@ export default function Claim() {
   });
   useEffect(() => {
     if (isAuthenticated) {
-      fetchERC20Balances({ params: { chain: setSelectedDestinationChain } });
+      fetchERC20Balances({ params: { chain: selectedDestinationChain } });
     }
   }, [isAuthenticated, account]);
 
@@ -63,29 +63,6 @@ export default function Claim() {
     setMessage(displayedMessage);
     setHiddenNotification(false);
   };
-
-  async function approve() {
-    let signer = web3.getSigner();
-    let selectedTokenContract = new ethers.Contract(
-      selectedToken,
-      tokenAbi,
-      signer
-    );
-    let bridgeContractToApprove =
-      chainId === "0x5" ? EthBridgeContractAddress : BscBridgeContractAddress;
-    let tx = await selectedTokenContract.approve(
-      bridgeContractToApprove,
-      ethers.utils.parseUnits(inputAmount, selectedTokenDecimals)
-    );
-    displayNotification("Approve pending ... ");
-    setHiddenNotification(false);
-    let response = await tx.wait();
-    if (response) {
-      displayNotification("Approve Successful.");
-    } else {
-      displayNotification("Error with the approve transaction");
-    }
-  }
 
   async function burn() {
     let signer = web3.getSigner();
