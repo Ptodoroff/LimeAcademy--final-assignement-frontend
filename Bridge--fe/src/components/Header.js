@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 import { Link } from "react-router-dom";
 import { useChain } from "react-moralis";
@@ -15,15 +15,18 @@ export default function Header() {
     logout,
   } = useMoralis();
   const { switchNetwork, chainId, chain } = useChain();
+  const [selectedDestinationChain, setSelectedDestinationChain] = useState("");
+
+  useEffect(() => {
+    setSelectedDestinationChain(chainId);
+  }, [chainId]);
 
   useEffect(() => {
     if (isAuthenticated) {
       async function web3andSwitchChain() {
         console.log("is authenticated");
         await enableWeb3();
-        console.log(isWeb3Enabled);
         connectedChain(chainId);
-        console.log(isWeb3Enabled);
       }
       web3andSwitchChain();
     }
@@ -66,9 +69,11 @@ export default function Header() {
         <Link to={"/Home"} className="Button btn btn-warning">
           Home
         </Link>
-        {" | "}
         <Link to={"/Bridge"} className=" btn btn-warning">
           Bridge
+        </Link>
+        <Link to={"/Claim"} className=" btn btn-warning">
+          Claim
         </Link>
       </div>
       <a
@@ -95,6 +100,31 @@ export default function Header() {
         <>
           <span className="btn btn-info chain">
             connected to: {connectedChain(chainId)}
+            <select
+              onChange={async (e) => {
+                setSelectedDestinationChain(e.target.value);
+                await switchNetwork(e.target.value);
+              }}
+            >
+              <option> Select chain</option>
+              <option
+                value={ethChainIdGoerli}
+                disabled={
+                  selectedDestinationChain == ethChainIdGoerli ? true : false
+                }
+              >
+                ETH Goerli{" "}
+              </option>
+              <option
+                value={bscChainIdTestnet}
+                disabled={
+                  selectedDestinationChain == bscChainIdTestnet ? true : false
+                }
+              >
+                {" "}
+                BSC Testnet{" "}
+              </option>
+            </select>
           </span>
           <a
             href={"#!"}

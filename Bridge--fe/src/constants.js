@@ -1,7 +1,7 @@
 export const EthBridgeContractAddress =
-  "0xE34FF472d19b84532D984FefEB0b7F46A4738c6b";
+  "0xbfD54c4b4D633765b627CC529E9152563a17025C";
 export const BscBridgeContractAddress =
-  "0x8498240A33b57BF61aFA8699f20424F298677FFf";
+  "0xdbc0B73a5F30c57fca94373781E1e7f2E4B6caDa";
 export const ethChainIdGoerli = "0x5";
 export const bscChainIdTestnet = "0x61";
 export const fee = 30000000000000000;

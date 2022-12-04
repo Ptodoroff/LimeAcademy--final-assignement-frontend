@@ -13,11 +13,13 @@ import bridgeContractAbi from "../contracts/Bridge.json";
 import wrappedTokenAbi from "../contracts/WrappedToken.json";
 import NotificationPanel from "./NotificationPanel";
 
-export default function Bridge() {
-  const { fetchERC20Balances, data } = useERC20Balances();
+export default function Claim() {
+  const { fetchERC20Balances, data, isLoading, isFetching, error } =
+    useERC20Balances();
   const { isAuthenticated, account, web3, isWeb3Enabled } = useMoralis();
-  const { chainId } = useChain();
+  const { switchNetwork, chainId, chain } = useChain();
   const [selectedToken, setSelectedToken] = useState("0x0");
+  const [selectedDestinationChain, setSelectedDestinationChain] = useState("");
   const [selectedTokenName, setSelectedTokenName] = useState("");
   const [selectedTokenBalance, setSelectedTokenBalance] = useState("");
   const [selectedTokenDecimals, setSelectedTokenDecimals] = useState("");
@@ -32,15 +34,19 @@ export default function Bridge() {
   //================================
 
   useEffect(() => {
+    setSelectedDestinationChain(chainId);
+  }, [chainId]);
+
+  useEffect(() => {
     if (isWeb3Enabled) {
       signer = web3.getSigner();
     }
   });
   useEffect(() => {
     if (isAuthenticated) {
-      fetchERC20Balances({ params: { chain: chainId } });
+      fetchERC20Balances({ params: { chain: setSelectedDestinationChain } });
     }
-  }, [isAuthenticated, account, chainId]);
+  }, [isAuthenticated, account]);
 
   const handleChange = (e) => {
     let name = e.target.selectedOptions[0].getAttribute("data-name");
@@ -81,7 +87,7 @@ export default function Bridge() {
     }
   }
 
-  async function lock() {
+  async function burn() {
     let signer = web3.getSigner();
     const EthBridgeContract = new ethers.Contract(
       EthBridgeContractAddress,
@@ -95,7 +101,7 @@ export default function Bridge() {
     );
     let selectedBridgeContract =
       chainId === "0x5" ? EthBridgeContract : BscBridgeContract;
-    let tx = await selectedBridgeContract.lock(
+    let tx = await selectedBridgeContract.burn(
       selectedToken,
       ethers.utils.parseUnits(String(inputAmount), selectedTokenDecimals),
       {
@@ -115,7 +121,7 @@ export default function Bridge() {
   return (
     <div className="mainContainer">
       {" "}
-      <h1>Bridge</h1>
+      <h1>Claim</h1>
       <div className="chainSelect">
         <span>Destination chain:</span>{" "}
         <div>
@@ -141,38 +147,33 @@ export default function Bridge() {
       </div>
       <div>
         <div className="tokenSelect">
-          <div id="tokenList">
-            <span>Select a token to bridge:</span>{" "}
-            <div>
-              {isAuthenticated && data && (
-                <select onChange={handleChange}>
-                  <option style={{ textAlign: "center" }}>
+          <span>Select a token to bridge:</span>{" "}
+          <div>
+            {isAuthenticated && data && (
+              <select onChange={handleChange}>
+                <option style={{ textAlign: "center" }}> Select a token</option>
+                {data.map((token, i) => (
+                  <option
+                    key={i}
+                    className="tokenInfo"
+                    value={token.token_address}
+                    data-name={token.name}
+                    data-balance={token.balance}
+                    data-decimals={token.decimals}
+                    style={{ textAlign: "center" }}
+                  >
                     {" "}
-                    Select a token
+                    {token.name}{" "}
                   </option>
-                  {data.map((token, i) => (
-                    <option
-                      key={i}
-                      className="tokenInfo"
-                      value={token.token_address}
-                      data-name={token.name}
-                      data-balance={token.balance}
-                      data-decimals={token.decimals}
-                      style={{ textAlign: "center" }}
-                    >
-                      {" "}
-                      {token.name}{" "}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
+                ))}
+              </select>
+            )}
           </div>
         </div>
       </div>
       <div className="amountCluster">
         {" "}
-        {selectedTokenName !== "" ? (
+        {selectedTokenName != "" ? (
           <>
             <p>
               Available {selectedTokenName}:{" "}
@@ -196,28 +197,19 @@ export default function Bridge() {
       </div>
       <p>
         {" "}
-        Note: there is a 0.03 {chainId === "0x5" ? "ETH" : "BSC"} fee on
+        Note: there is a 0.03 {chainId == "0x5" ? "ETH" : "BSC"} fee on
         bridging.{" "}
       </p>
       <div className="buttons">
-        <button
-          className="btn btn-secondary"
-          onClick={() => {
-            approve();
-          }}
-          disabled={!inputAmount || !selectedToken}
-        >
-          Approve
-        </button>
         <div className="lockButton">
           <button
             className="btn btn-secondary"
             onClick={() => {
-              lock();
+              burn();
             }}
             disabled={!inputAmount || !selectedToken}
           >
-            Bridge
+            Claim
           </button>
         </div>
       </div>

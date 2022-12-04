@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { MoralisProvider } from "react-moralis";
 import App from "./App";
-import dotenv from "dotenv";
 let url = process.env.REACT_APP_MORALIS_SERVER_URL;
 let password = process.env.REACT_APP_MORALIS_APP_ID;
 ReactDOM.render(

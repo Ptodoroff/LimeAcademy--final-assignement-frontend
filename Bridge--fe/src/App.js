@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Bridge from "./components/Bridge";
+import Claim from "./components/Claim";
 import Home from "./components/Home";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/Home" index element={<Home />} />
           <Route path="/Bridge" index element={<Bridge />} />
+          <Route path="/Claim" index element={<Claim />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -50,7 +50,7 @@ a {
 
 .tokenSelect,
 .chainSelect {
-  height: 10vh;
+  height: 15vh;
   margin: 2em;
   background-color: grey;
   display: flex;
@@ -58,6 +58,16 @@ a {
   align-items: center;
   font-size: 1.7em;
   border-radius: 20px;
+}
+
+#tokenList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tokenSelect {
+  flex-direction: column;
+  height: 20vh;
 }
 select,
 input {
@@ -70,7 +80,7 @@ input {
   display: flex;
   flex-direction: column;
   background-color: grey;
-  height: 15vh;
+  height: 20vh;
   margin: 2em;
   font-size: 1.5em;
   border-radius: 20px;
