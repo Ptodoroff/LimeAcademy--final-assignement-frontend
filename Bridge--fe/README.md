@@ -1,6 +1,6 @@
 > LimeAcademy cohort IV final task - an ETH - BNB token bridge.
 
-Access the app witohut cloning and going through the NPM process by visiting this website : https://dreamy-truffle-7f9817.netlify.app/
+Access the app without cloning and going through the NPM process by visiting this website : https://dreamy-truffle-7f9817.netlify.app/
 
 ---
 
